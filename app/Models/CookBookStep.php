@@ -14,4 +14,9 @@ class CookBookStep extends Model
     {
         return $this->belongsTo(CookBook::class, 'book_id');
     }
+
+    public function getCoverAttribute($value)
+    {
+        return storage_url($value, 'admin');
+    }
 }
