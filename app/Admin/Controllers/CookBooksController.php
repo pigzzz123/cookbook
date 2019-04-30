@@ -70,12 +70,11 @@ class CookBooksController extends Controller
         $grid->id('ID')->sortable();
         $grid->cover('封面')->image('', null, 40);
         $grid->name('名称');
-        $grid->column('foods', '包括食材')->display(function () {
-            return $this->foods->map(function ($food) {
-                return $food->food->name;
-            })->toArray();
-        })->label();
         $grid->updated_at('更新时间');
+
+        $grid->actions(function ($actions) {
+            $actions->disableView();
+        });
 
         return $grid;
     }
@@ -95,7 +94,7 @@ class CookBooksController extends Controller
         $form->textarea('tips', '提示');
 
         $form->hasMany('foods', '食材列表', function (Form\NestedForm $form) {
-            $form->select('food_id', '食材')->ajax('/admin/api/foods');
+            $form->select('food_id', '食材')->options(Food::query()->get()->pluck('name', 'id'));
             $form->text('number', '数量');
         });
 

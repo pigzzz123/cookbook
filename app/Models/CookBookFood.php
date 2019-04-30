@@ -17,6 +17,6 @@ class CookBookFood extends Model
 
     public function food()
     {
-        return $this->hasOne(Food::class, 'food_id');
+        return $this->belongsTo(Food::class, 'food_id');
     }
 }
