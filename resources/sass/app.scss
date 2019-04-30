@@ -55,3 +55,65 @@ body {
     }
   }
 }
+
+.box {
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: .25rem;
+  box-shadow: 0 2px 6px 0 rgba(0,0,0,.1);
+  &.box-flush {
+    padding: 0;
+  }
+  .box-heading {
+    margin-bottom: 1rem;
+  }
+  .box-body {
+    padding: 1.5rem;
+  }
+}
+
+.food-list {
+  .item {
+    text-decoration: none;
+    display: block;
+    padding: 7.5px 0;
+  }
+}
+
+.cookbook-list {
+  .card-title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    height: 3.4rem;
+    color: #212529;
+    text-decoration: none;
+  }
+  .tags {
+    font-size: 1rem;
+  }
+}
+
+.list-page {
+  padding: 1rem 0;
+}
+
+.cookbook-detail {
+  .cover {
+    img {
+      max-width: 100%;
+    }
+  }
+}
+
+.step-list {
+  .cover {
+    img {
+      max-width: 100%;
+    }
+  }
+  .content {
+    line-height: 1.6;
+  }
+}

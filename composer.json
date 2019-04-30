@@ -12,8 +12,10 @@
         "encore/laravel-admin": "^1.6",
         "fabpot/goutte": "^3.2",
         "fideloper/proxy": "^4.0",
+        "fukuball/jieba-php": "^0.33.0",
         "laravel/framework": "5.8.*",
-        "laravel/tinker": "^1.0"
+        "laravel/tinker": "^1.0",
+        "vanry/laravel-scout-tntsearch": "^1.3"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

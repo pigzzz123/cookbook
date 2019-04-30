@@ -13,6 +13,8 @@
 
 Route::get('/', 'PagesController@root')->name('root');
 
-Route::get('/g', function () {
-   \Artisan::call('gather:cookbook');
-});
+Route::get('categories', 'CategoriesController@index')->name('categories');
+
+Route::get('foods', 'FoodsController@index')->name('foods');
+
+Route::get('cookbooks/{cookbook}', 'CookBooksController@show')->name('cookbooks.show');

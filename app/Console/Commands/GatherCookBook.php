@@ -109,7 +109,7 @@ class GatherCookBook extends Command
     {
         $httpClient = new HttpClient([
             'base_uri' => 'http://www.zuofan.cn/',
-            'timeout' => 60,
+            'timeout' => 120,
             'header' => [
                 'User-Agent' => $this->randomUA(),
                 'Referer' => 'http://www.zuofan.cn/jc/',
@@ -132,8 +132,8 @@ class GatherCookBook extends Command
                 $contentCrawler->filter('.cp_show>.center')->each(function (Crawler $node) use (&$urls, $index) {
                     $category_id = $this->category_id;
                     $name = $node->filter('h1')->count() ? $node->filter('h1')->text() : '';
-                    $cover = $node->filter('.pic>img')->count() ? $node->filter('.pic>img')->attr('src') : '';
-                    $description = $node->filter('.efficacy')->count() ? $node->filter('.efficacy')->text() : '';
+                    $cover = $node->filter('.pic>img')->count() ? $node->filter('.pic>img')->attr('src') : ($node->filter('.content img')->count() ? $node->filter('.content img')->eq(0)->attr('src') : '');
+                    $description = $node->filter('.efficacy')->count() ? preg_replace("/<(span.*?)>(.*?)<(\/span.*?)>/si","", $node->filter('.efficacy')->html()) : '';
                     $tips = $node->filter('.jiqiao>p')->count() ? $node->filter('.jiqiao>p')->text() : '';
                     $foods = $node->filter('.yuanliao>ul>li')->count() ? $node->filter('.yuanliao>ul>li')->each(function (Crawler $n) {
                        return [
