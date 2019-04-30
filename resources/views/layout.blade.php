@@ -9,7 +9,7 @@
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <title>@yield('title', 'CookBook') - 菜谱搜索</title>
+  <title>@yield('title', 'CookBook') - CookBook菜谱搜索</title>
 
   <!-- Styles -->
   <link href="{{ mix('css/app.css') }}" rel="stylesheet">

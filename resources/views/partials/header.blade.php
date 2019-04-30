@@ -33,7 +33,7 @@
           <div class="input-group input-group-lg">
             <input type="text" class="form-control" name="keywords" placeholder="搜索 菜谱/分类/食材">
             <div class="input-group-append">
-              <button class="btn btn-primary" type="button">搜索</button>
+              <button class="btn btn-primary" type="button"><i class="fa fa-search"></i> 搜索</button>
             </div>
           </div>
         </form>
