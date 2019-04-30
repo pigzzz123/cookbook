@@ -41,6 +41,11 @@ class Category extends Model
         return $this->hasMany(Category::class, 'parent_id');
     }
 
+    public function books()
+    {
+        return $this->hasMany(CookBook::class, 'category_id');
+    }
+
     // 定一个一个访问器，获取所有祖先类目的 ID 值
     public function getPathIdsAttribute()
     {

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CookBook extends Model
 {
     protected $fillable = [
-        'name', 'cover', 'description', 'tips'
+        'name', 'cover', 'description', 'tips', 'category_id'
     ];
 
     public function foods()
@@ -18,6 +18,11 @@ class CookBook extends Model
     public function steps()
     {
         return $this->hasMany(CookBookStep::class, 'book_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     public function getCoverAttribute($value)

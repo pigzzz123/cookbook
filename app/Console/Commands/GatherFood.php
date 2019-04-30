@@ -55,6 +55,7 @@ class GatherFood extends Command
 
         foreach ($list as $data) {
             Food::firstOrCreate($data);
+            $this->info('创建食材：'.$data['name'].'成功');
         }
     }
 }

@@ -13,7 +13,7 @@ Route::group([
     $router->get('/', 'HomeController@index')->name('admin.home');
 
     $router->resource('categories', 'CategoriesController')->except(['show'])->names('admin.categories');
-    $router->get('api/categories', 'CategoriesController@apiIndex')->name('admin.api.categories');
+    $router->get('api/categories/{is_directory?}', 'CategoriesController@apiIndex')->name('admin.api.categories');
 
     $router->resource('foods', 'FoodsController')->except(['show'])->names('admin.foods');
     $router->get('api/foods', 'FoodsController@apiIndex')->name('admin.api.foods');

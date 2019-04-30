@@ -28,8 +28,10 @@ class GatherCookBook extends Command
      */
     protected $description = 'gather cookbooks';
 
-    private $pageIndex = 1;
-    private $pages;
+    private $list_url;
+    private $page_index = 1;
+    private $pages = 30;
+    private $category_id;
 
     /**
      * Create a new command instance.
@@ -48,26 +50,18 @@ class GatherCookBook extends Command
      */
     public function handle()
     {
-        $client = new Client();
-        $httpClient = new HttpClient([
-            'base_uri' => 'https://www.xiangha.com/',
-            'timeout' => 60,
-        ]);
-        $client->setClient($httpClient);
+        $this->list_url = $this->ask('请输入列表网址');
+        $this->page_index = $this->ask('请输入起始页');
+        $this->pages = $this->ask('请输入采集页数');
+        $this->category_id = $this->ask('请输入分类 ID');
 
         $urls = $this->gatherUrls();
 
         $this->gatherDetail($urls);
-
-
-
     }
 
     protected function gatherUrls()
     {
-        $this->pageIndex = 1;
-        $this->pages = 10;
-
         $httpClient = new HttpClient([
             'base_uri' => 'http://www.zuofan.cn/',
             'timeout' => 60,
@@ -78,8 +72,8 @@ class GatherCookBook extends Command
         ]);
 
         $requests = function ($total) use ($httpClient) {
-            for ($i = 1; $i <= $total; $i++) {
-                $url = 'jc/sucai/list_174_'.$i.'.html';
+            for ($i = $this->page_index; $i <= $total; $i++) {
+                $url = str_ireplace('PAGE', $i, $this->list_url);
                 yield function() use ($httpClient, $url) {
                     return $httpClient->getAsync($url);
                 };
@@ -97,13 +91,10 @@ class GatherCookBook extends Command
                     $urls[] = $node->attr('href');
                 });
 
-                $this->countedAndCheckEnded();
-
             },
             'rejected' => function ($reason, $index){
                 $this->error("rejected" );
                 $this->error("rejected reason: " . $reason );
-                $this->countedAndCheckEnded();
             },
         ]);
 
@@ -116,9 +107,6 @@ class GatherCookBook extends Command
 
     protected function gatherDetail($urls = [])
     {
-        $this->pageIndex = 1;
-        $this->pages = count($urls);
-
         $httpClient = new HttpClient([
             'base_uri' => 'http://www.zuofan.cn/',
             'timeout' => 60,
@@ -136,16 +124,17 @@ class GatherCookBook extends Command
             }
         };
 
-        $pool = new Pool($httpClient, $requests($this->pages), [
+        $pool = new Pool($httpClient, $requests(count($urls)), [
             'concurrency' => 5,
             'fulfilled'   => function ($response, $index) use (&$urls) {
 
                 $contentCrawler = new Crawler($response->getBody()->getContents());
                 $contentCrawler->filter('.cp_show>.center')->each(function (Crawler $node) use (&$urls, $index) {
-                    $name = $node->filter('h1')->text();
+                    $category_id = $this->category_id;
+                    $name = $node->filter('h1')->count() ? $node->filter('h1')->text() : '';
                     $cover = $node->filter('.pic>img')->count() ? $node->filter('.pic>img')->attr('src') : '';
-                    $description = $node->filter('.efficacy')->text();
-                    $tips = $node->filter('.jiqiao>p')->text();
+                    $description = $node->filter('.efficacy')->count() ? $node->filter('.efficacy')->text() : '';
+                    $tips = $node->filter('.jiqiao>p')->count() ? $node->filter('.jiqiao>p')->text() : '';
                     $foods = $node->filter('.yuanliao>ul>li')->count() ? $node->filter('.yuanliao>ul>li')->each(function (Crawler $n) {
                        return [
                            'name' => preg_replace("/<(span.*?)>(.*?)<(\/span.*?)>/si","", $n->html()),
@@ -161,17 +150,14 @@ class GatherCookBook extends Command
                         ];
                     }) : [];
 
-                    $data = compact('name', 'cover', 'description', 'tips', 'foods', 'steps');
+                    $data = compact('name', 'cover', 'description', 'tips', 'foods', 'steps', 'category_id');
                     $this->createBook($data);
                 });
-
-                $this->countedAndCheckEnded();
 
             },
             'rejected' => function ($reason, $index){
                 $this->error("rejected" );
                 $this->error("rejected reason: " . $reason );
-                $this->countedAndCheckEnded();
             },
         ]);
 
@@ -182,7 +168,7 @@ class GatherCookBook extends Command
 
     public function createBook($data)
     {
-        $cookbook = CookBook::firstOrCreate(Arr::only($data, ['name', 'cover', 'description', 'tips']));
+        $cookbook = CookBook::firstOrCreate(Arr::only($data, ['name', 'cover', 'description', 'tips', 'category_id']));
 
         if (count($data['foods'])) {
             foreach ($data['foods'] as $item) {
@@ -199,15 +185,6 @@ class GatherCookBook extends Command
         }
 
         $this->info('创建菜谱：'.$cookbook->name.'成功');
-    }
-
-    protected function countedAndCheckEnded()
-    {
-        if ($this->pageIndex < $this->pages){
-            $this->pageIndex++;
-            return;
-        }
-        $this->info("请求结束！");
     }
 
     protected function randomUA()

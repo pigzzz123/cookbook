@@ -68,12 +68,20 @@ class CookBooksController extends Controller
         $grid = new Grid(new CookBook);
 
         $grid->id('ID')->sortable();
+        $grid->column('category.name', '分类')->label('success');
         $grid->cover('封面')->image('', null, 40);
         $grid->name('名称');
         $grid->updated_at('更新时间');
 
         $grid->actions(function ($actions) {
             $actions->disableView();
+        });
+
+        $grid->filter(function($filter){
+
+            $filter->disableIdFilter();
+            $filter->like('name', '名称');
+            $filter->equal('category_id', '分类')->select('/admin/api/categories/0');
         });
 
         return $grid;
@@ -88,6 +96,7 @@ class CookBooksController extends Controller
     {
         $form = new Form(new CookBook);
 
+        $form->select('category_id', '分类')->ajax('/admin/api/categories/0');
         $form->text('name', '名称')->rules('required');
         $form->image('cover', '封面')->uniqueName();
         $form->textarea('description', '描述');

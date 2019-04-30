@@ -16,6 +16,8 @@ class CreateCookBooksTable extends Migration
         Schema::create('cook_books', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name')->comment('名称');
+            $table->unsignedBigInteger('category_id')->nullable()->comment('分类 id');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->string('cover')->nullable()->comment('封面');
             $table->text('description')->nullable()->comment('描述');
             $table->text('tips')->nullable()->comment('提示');

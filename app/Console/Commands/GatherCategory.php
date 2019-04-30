@@ -76,6 +76,7 @@ class GatherCategory extends Command
         }
         //  保存到数据库
         $category->save();
+        $this->info('创建分类：'.$data['name'].'成功');
         // 如果有 children 字段并且 children 字段是一个数组
         if (isset($data['children']) && is_array($data['children'])) {
             // 遍历 children 字段
