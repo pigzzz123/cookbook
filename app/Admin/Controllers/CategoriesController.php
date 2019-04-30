@@ -40,7 +40,7 @@ class CategoriesController extends Controller
         return $content
             ->header('分类')
             ->description('编辑')
-            ->body($this->form()->edit($id));
+            ->body($this->form(true)->edit($id));
     }
 
     /**

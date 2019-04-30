@@ -15,4 +15,6 @@ Route::group([
     $router->resource('categories', 'CategoriesController')->except(['show'])->names('admin.categories');
     $router->get('api/categories', 'CategoriesController@apiIndex')->name('admin.api.categories');
 
+    $router->resource('foods', 'FoodsController')->except(['show'])->names('admin.foods');
+
 });
