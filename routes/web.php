@@ -12,3 +12,7 @@
 */
 
 Route::get('/', 'PagesController@root')->name('root');
+
+Route::get('/g', function () {
+   \Artisan::call('gather:category');
+});
