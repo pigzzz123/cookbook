@@ -12,4 +12,7 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->name('admin.home');
 
+    $router->resource('categories', 'CategoriesController')->except(['show'])->names('admin.categories');
+    $router->get('api/categories', 'CategoriesController@apiIndex')->name('admin.api.categories');
+
 });
