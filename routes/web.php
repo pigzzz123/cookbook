@@ -14,6 +14,7 @@
 Route::get('/', 'PagesController@root')->name('root');
 
 Route::get('categories', 'CategoriesController@index')->name('categories');
+Route::get('categories/{category}', 'CategoriesController@show')->name('categories.show');
 
 Route::get('foods', 'FoodsController@index')->name('foods');
 

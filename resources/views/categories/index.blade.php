@@ -10,7 +10,7 @@
           <div class="box-body">
             <div class="category-list">
               @foreach ($item->children as $child)
-                <a href="#" class="btn btn-sm btn-outline-primary mr-1 mb-2">{{ $child->name }}</a>
+            <a href="{{ route('categories.show', $child->id) }}" class="btn btn-sm btn-outline-primary mr-1 mb-2">{{ $child->name }}</a>
               @endforeach
             </div>
           </div>

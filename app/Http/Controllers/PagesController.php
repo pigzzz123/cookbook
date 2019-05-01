@@ -14,7 +14,7 @@ class PagesController extends Controller
 
         $cookbooks = CookBook::with(['foods' => function($query) {
             $query->take(5);
-        }, 'foods.food'])->orderBy('created_at', 'desc')->orderBy('created_at', 'desc')->paginate(15);
+        }, 'foods.food'])->orderBy('created_at', 'desc')->paginate(15);
         if ($query) {
             $cookbooks = CookBook::search($query)->paginate(15);
         }

@@ -13,4 +13,13 @@ class CategoriesController extends Controller
 
         return view('categories.index', compact('categories'));
     }
+
+    public function show(Category $category)
+    {
+        $cookbooks = $category->books()->with(['foods' => function($query) {
+            $query->take(5);
+        }, 'foods.food'])->orderBy('created_at', 'desc')->paginate(16);
+
+        return view('categories.show', compact('category', 'cookbooks'));
+    }
 }
